@@ -1,0 +1,48 @@
+{
+  "name": "essay-grader",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@clerk/nextjs": "^4.29.9",
+    "@prisma/client": "^5.11.0",
+    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-slot": "^1.0.2",
+    "@react-pdf/renderer": "^3.4.0",
+    "@tailwindcss/typography": "^0.5.10",
+    "@tanstack/react-query": "^5.28.6",
+    "@trpc/client": "^11.0.0-next.320",
+    "@trpc/next": "^11.0.0-next.320",
+    "@trpc/react-query": "^11.0.0-next.320",
+    "@trpc/server": "^11.0.0-next.320",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
+    "date-fns": "^3.6.0",
+    "lucide-react": "^0.361.0",
+    "next": "14.1.4",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-dropzone": "^14.2.3",
+    "react-loading-skeleton": "^3.4.0",
+    "tailwind-merge": "^2.2.2",
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10.0.1",
+    "eslint": "^8",
+    "eslint-config-next": "14.1.4",
+    "postcss": "^8",
+    "prisma": "^5.11.0",
+    "tailwindcss": "^3.3.0",
+    "typescript": "^5"
+  }
+}
