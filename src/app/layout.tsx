@@ -5,8 +5,9 @@ import { cn } from "@/lib/utils";
 import Navbar from "@/components/Navbar";
 import { ClerkProvider } from "@clerk/nextjs";
 import Providers from "@/components/Providers";
+import { createTheme, MantineProvider } from "@mantine/core";
 import "react-loading-skeleton/dist/skeleton.css";
-
+import "@mantine/dropzone/styles.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -30,7 +31,7 @@ export default function RootLayout({
             )}
           >
             <Navbar />
-            {children}
+            <MantineProvider>{children}</MantineProvider>
           </body>
         </html>
       </ClerkProvider>
