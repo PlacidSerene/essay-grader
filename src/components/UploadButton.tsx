@@ -9,6 +9,7 @@ import { trpc } from "@/app/_trpc/client";
 import { useToast } from "./ui/use-toast";
 import type { FileWithPath } from "@mantine/dropzone";
 import { Progress } from "./ui/progress";
+import { uploadFileToServer } from "@/lib/aws/uploadFileToServer";
 const UploadDropzone = (props: Partial<DropzoneProps>) => {
   const [acceptedFiles, setAcceptedFiles] = useState<FileWithPath[]>([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -34,49 +35,21 @@ const UploadDropzone = (props: Partial<DropzoneProps>) => {
         setAcceptedFiles(files);
         setIsUploading(true);
         const progressInterval = startSimulateProgress();
-        const response = await fetch(absoluteUrl("/api/upload"), {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            filename: files[0].name,
-            contentType: files[0].type,
-          }),
+        const uploadPromises: Promise<void>[] = [];
+        files.forEach((file) => {
+          const reader = new FileReader();
+          reader.readAsArrayBuffer(file);
+          reader.onload = (event) => {
+            const fileData = event.target?.result as ArrayBuffer;
+            uploadPromises.push(uploadFileToServer(file.name, fileData));
+          };
+          reader.onerror = (error) => {
+            console.log("Error reading file:", error);
+          };
         });
-        if (response.ok) {
-          const { url, fields, key } = await response.json();
-          console.log(fields);
-          const formData = new FormData();
-          Object.entries(fields).forEach(([key, value]) => {
-            formData.append(key, value as string);
-          });
-
-          files.forEach((file) => formData.append("file", file));
-          console.log("after", formData);
-
-          const uploadResponse = await fetch(url, {
-            method: "POST",
-            body: formData,
-          });
-
-          if (uploadResponse.ok) {
-            alert("Upload successful!");
-            try {
-              await createFile({
-                key: key,
-                name: files[0].name,
-              });
-            } catch (error) {
-              console.log(error);
-            }
-          } else {
-            console.error("S3 Upload Error:", uploadResponse);
-            alert("Upload failed.");
-          }
-        } else {
-          alert("Failed to get pre-signed URL.");
-        }
+        await Promise.all(uploadPromises);
+        console.log("upload completed!");
+        setIsUploading(false);
       }}
       onReject={(files) => console.log("rejected files", files)}
       maxSize={1 * 1024 ** 2}
