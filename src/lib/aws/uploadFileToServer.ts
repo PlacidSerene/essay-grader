@@ -5,7 +5,7 @@ export const uploadFileToServer = async (
   fileData: ArrayBuffer
 ) => {
   try {
-    const reponse = await fetch(absoluteUrl("/api/upload"), {
+    const response = await fetch(absoluteUrl("/api/upload"), {
       method: "POST",
       body: fileData,
       headers: {
@@ -13,7 +13,13 @@ export const uploadFileToServer = async (
         filename: fileName, // Include filename in header
       },
     });
+    // return new Response({});
   } catch (error) {
-    console.error("Error uploading file:", error);
+    return new Response(`An error has occured: ${error}`, {
+      status: 400,
+    });
   }
+  return new Response(JSON.stringify({ fileName }), {
+    status: 200,
+  });
 };

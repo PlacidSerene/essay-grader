@@ -18,10 +18,11 @@ export async function POST(req: Request) {
     Body: buffer,
   });
   try {
-    const response = await s3Client.send(command);
-    console.log(response);
+    await s3Client.send(command);
   } catch (error) {
     console.log("There was an error", error);
   }
-  return Response.json({});
+  return new Response(JSON.stringify({ message: "Success!", fileName }), {
+    status: 200,
+  });
 }

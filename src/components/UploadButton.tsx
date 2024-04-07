@@ -35,21 +35,26 @@ const UploadDropzone = (props: Partial<DropzoneProps>) => {
         setAcceptedFiles(files);
         setIsUploading(true);
         const progressInterval = startSimulateProgress();
-        const uploadPromises: Promise<void>[] = [];
-        files.forEach((file) => {
+        const uploadPromises: Promise<Response>[] = [];
+        for (const file of files) {
           const reader = new FileReader();
           reader.readAsArrayBuffer(file);
-          reader.onload = (event) => {
+          reader.onload = async (event) => {
             const fileData = event.target?.result as ArrayBuffer;
-            uploadPromises.push(uploadFileToServer(file.name, fileData));
+            // uploadPromises.push(uploadFileToServer(file.name, fileData));
+            const response = await uploadFileToServer(file.name, fileData);
+            await createFile({
+              key: file.name,
+              name: file.name,
+            });
+            console.log(`create ${file.name} in the db`);
           };
           reader.onerror = (error) => {
             console.log("Error reading file:", error);
           };
-        });
-        await Promise.all(uploadPromises);
-        console.log("upload completed!");
-        setIsUploading(false);
+        }
+
+        // upload each file one by one
       }}
       onReject={(files) => console.log("rejected files", files)}
       maxSize={1 * 1024 ** 2}
@@ -69,7 +74,7 @@ const UploadDropzone = (props: Partial<DropzoneProps>) => {
               <File className="h-6 w-6" />
             </Dropzone.Idle>
             <h3 className="font-medium text-zinc-800">
-              Drag images here or click to select files
+              Drag files here or click to select files
             </h3>
             <p className="text-sm text-zinc-500">
               (You can attach multiple files, each up to 1MB)
