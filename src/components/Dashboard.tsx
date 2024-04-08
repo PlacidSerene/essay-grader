@@ -8,7 +8,9 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { Button } from "./ui/button";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 const Dashboard = () => {
+  const router = useRouter();
   const [currentlyDeletingFile, setCurrentlyDeletingFile] = useState<
     string | null
   >(null);

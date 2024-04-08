@@ -12,7 +12,7 @@ type ProgressProps = React.ComponentPropsWithoutRef<
 const Progress = React.forwardRef<
   React.ElementRef<typeof ProgressPrimitive.Root>,
   ProgressProps
->(({ className, value, ...props }, ref) => (
+>(({ className, value, indicatorColor, ...props }, ref) => (
   <ProgressPrimitive.Root
     ref={ref}
     className={cn(
