@@ -16,6 +16,8 @@ export async function POST(req: Request) {
     Bucket: process.env.AWS_BUCKET_NAME!,
     Key: fileName,
     Body: buffer,
+    ContentType:
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
   });
   try {
     await s3Client.send(command);

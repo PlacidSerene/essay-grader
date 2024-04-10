@@ -1,20 +1,15 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
-import { Button, buttonVariants } from "./ui/button";
+import { Button } from "./ui/button";
 import { Dropzone, DropzoneProps, MS_WORD_MIME_TYPE } from "@mantine/dropzone";
 import { File, FileX, FileCheck, Loader2, Check } from "lucide-react";
-import { absoluteUrl, getFileUrl } from "@/lib/utils";
 import { trpc } from "@/app/_trpc/client";
 import { useToast } from "./ui/use-toast";
-import type { FileWithPath } from "@mantine/dropzone";
 import { Progress } from "./ui/progress";
 import { uploadFileToServer } from "@/lib/aws/uploadFileToServer";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
 
 const UploadDropzone = (props: Partial<DropzoneProps>) => {
-  const router = useRouter();
   const utils = trpc.useUtils();
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -47,30 +42,40 @@ const UploadDropzone = (props: Partial<DropzoneProps>) => {
       onDrop={async (files) => {
         setIsUploading(true);
         const progressInterval = startSimulateProgress();
-        for (const file of files) {
-          const reader = new FileReader();
-          reader.readAsArrayBuffer(file);
-          reader.onload = async (event) => {
-            const fileData = event.target?.result as ArrayBuffer;
-            // uploadPromises.push(uploadFileToServer(file.name, fileData));
-            await uploadFileToServer(file.name, fileData);
-            await createFile({
-              key: file.name,
-              name: file.name,
-            });
-          };
-          reader.onerror = (error) => {
-            console.log("Error reading file:", error);
-          };
+        try {
+          for (const file of files) {
+            const reader = new FileReader();
+            reader.readAsArrayBuffer(file);
+            reader.onload = async (event) => {
+              const fileData = event.target?.result as ArrayBuffer;
+              await uploadFileToServer(file.name, fileData);
+              await createFile({
+                key: file.name,
+                name: file.name,
+              });
+            };
+            reader.onerror = (error) => {
+              console.log("Error reading file:", error);
+            };
+          }
+          clearInterval(progressInterval);
+          setUploadProgress(100);
+        } catch (error) {
+          toast({
+            title: "Something went wrong",
+            description: "Please try again later",
+            variant: "destructive",
+          });
         }
-        clearInterval(progressInterval);
-        setUploadProgress(100);
-        const fileNames = files.map((file) => file.name);
-
-        console.log("after polling");
         // upload each file one by one
       }}
-      onReject={(files) => console.log("rejected files", files)}
+      onReject={(files) => {
+        return toast({
+          title: "Files are rejected",
+          description: "Please try again later",
+          variant: "destructive",
+        });
+      }}
       maxSize={1 * 1024 ** 2}
       accept={MS_WORD_MIME_TYPE}
       {...props}
