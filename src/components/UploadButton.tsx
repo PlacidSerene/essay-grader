@@ -48,9 +48,10 @@ const UploadDropzone = (props: Partial<DropzoneProps>) => {
             reader.readAsArrayBuffer(file);
             reader.onload = async (event) => {
               const fileData = event.target?.result as ArrayBuffer;
-              await uploadFileToServer(file.name, fileData);
+              const newKey = crypto.randomUUID();
+              await uploadFileToServer(newKey, fileData);
               await createFile({
-                key: file.name,
+                key: newKey,
                 name: file.name,
               });
             };

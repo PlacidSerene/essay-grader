@@ -13,18 +13,12 @@ const Page = () => {
     },
   ];
   return (
-    <div>
+    <div className="h-screen w-2/3">
       <h1 className="text-gray-700">Test the AI model</h1>
       <DocViewer
         pluginRenderers={DocViewerRenderers}
         documents={docs}
         prefetchMethod="GET"
-      />
-      <img
-        src="https://test-bucket-abcdr.s3.ap-southeast-1.amazonaws.com/54a5159838a2475a81c373609739a544.jpg"
-        alt=""
-        width={300}
-        height={150}
       />
     </div>
   );
