@@ -1,12 +1,5 @@
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 
-import { z } from "zod";
-
-const uploadSchema = z.object({
-  filename: z.string(),
-  contentType: z.string(),
-});
-
 export async function POST(req: Request) {
   const s3Client = new S3Client({ region: process.env.AWS_REGION });
   const fileName = req.headers.get("filename")!;

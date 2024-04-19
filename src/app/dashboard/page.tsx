@@ -1,5 +1,5 @@
 import React from "react";
-import { auth, clerkClient } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { db } from "@/db";
 import Dashboard from "@/components/Dashboard";
