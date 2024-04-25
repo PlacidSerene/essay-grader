@@ -32,6 +32,7 @@ model AiFile {
   id   String @id @default(cuid())
   name String
   url  String
+  key  String
 
   createdAt DateTime @default(now())
   File      File?    @relation(fields: [fileId], references: [id])

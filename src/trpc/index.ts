@@ -6,7 +6,7 @@ import { z } from "zod";
 import { UploadStatus } from "@prisma/client";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { getFileUrl } from "@/lib/utils";
-
+import path from "path";
 export const appRouter = router({
   // ...
   authCallback: publicProcedure.query(async () => {
@@ -38,13 +38,26 @@ export const appRouter = router({
 
     return { success: true };
   }),
-  // getAiFile: privateProcedure
-  // .input(z.object({key: z.string()}))
-  // .mutation(async ({ctx, input}) => {
-  //   const {userId} = ctx;
-  //   const file = await db.
-  // })
-  // ,
+  readDocxFile: privateProcedure
+    .input(z.object({ file: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const filePath = path.join(path.resolve(__dirname, input.file));
+      console.log(filePath);
+      return filePath;
+    }),
+  getAiFile: privateProcedure
+    .input(z.object({ key: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const { userId } = ctx;
+      const file = await db.aiFile.findFirst({
+        where: {
+          key: input.key,
+          userId,
+        },
+      });
+      if (!file) throw new TRPCError({ code: "NOT_FOUND" });
+      return file;
+    }),
   getUserFiles: privateProcedure.query(async ({ ctx }) => {
     const { userId } = ctx;
     return await db.file.findMany({

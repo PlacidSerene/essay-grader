@@ -8,17 +8,29 @@ import { trpc } from "@/app/_trpc/client";
 import { useToast } from "./ui/use-toast";
 import { Progress } from "./ui/progress";
 import { uploadFileToServer } from "@/lib/aws/uploadFileToServer";
+import mammoth from "mammoth";
+import { absoluteUrl, extractParagraphs } from "@/lib/utils";
+import type { FileWithPath } from "@mantine/dropzone";
 
-const UploadDropzone = (props: Partial<DropzoneProps>) => {
+interface onDialogCloseHandlerProps {
+  onDialogCloseHandler: () => void;
+}
+const UploadDropzone = (
+  props: Partial<DropzoneProps> & onDialogCloseHandlerProps
+) => {
   const utils = trpc.useUtils();
+  const closeDialog = props.onDialogCloseHandler;
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-
+  const [allFileUploaded, setAllFileUploaded] = useState(false);
+  const [currentFileUpload, setCurrentFileUpload] =
+    useState<null | FileWithPath>(null);
   const { mutate: createFile } = trpc.createFile.useMutation({
     onSuccess: () => {
       utils.getUserFiles.invalidate();
     },
   });
+  // const { mutate: readFile } = trpc.readDocxFile.useMutation();
   const { toast } = useToast();
   const startSimulateProgress = () => {
     setUploadProgress(0);
@@ -28,47 +40,84 @@ const UploadDropzone = (props: Partial<DropzoneProps>) => {
           clearInterval(interval);
           return prevProgress;
         }
-        return prevProgress + 5;
+        return prevProgress + 3;
       });
     }, 500);
     return interval;
   };
-
   return (
     <Dropzone
-      activateOnClick={uploadProgress !== 100}
       disabled={isUploading}
       multiple={true}
       onDrop={async (files) => {
         setIsUploading(true);
-        const progressInterval = startSimulateProgress();
         try {
           for (const file of files) {
+            setCurrentFileUpload(file);
             const reader = new FileReader();
-            reader.readAsArrayBuffer(file);
-            reader.onload = async (event) => {
-              const fileData = event.target?.result as ArrayBuffer;
-              const newKey = crypto.randomUUID();
-              await uploadFileToServer(newKey, fileData);
-              await createFile({
-                key: newKey,
-                name: file.name,
-              });
-            };
-            reader.onerror = (error) => {
-              console.log("Error reading file:", error);
-            };
+            const progressInterval = startSimulateProgress();
+
+            await new Promise<void>((resolve, reject) => {
+              reader.onload = async (event) => {
+                try {
+                  const binaryString = event.target?.result as ArrayBuffer;
+                  const { value: data } = await mammoth.extractRawText({
+                    arrayBuffer: binaryString,
+                  });
+
+                  const { topic, essay } = extractParagraphs(data);
+
+                  const response = await fetch(absoluteUrl("/api/file"), {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      essay: essay,
+                      topic: topic,
+                    }),
+                  });
+
+                  if (!response.ok) {
+                    throw new Error("Failed to upload file");
+                  }
+
+                  const { fileId } = await response.json();
+                  await createFile({
+                    key: fileId,
+                    name: file.name,
+                  });
+
+                  console.log("File created!");
+                  clearInterval(progressInterval);
+                  resolve();
+                } catch (error) {
+                  console.error("Error processing file:", error);
+                  clearInterval(progressInterval);
+                  reject(error); // Reject the Promise to propagate the error
+                }
+              };
+              reader.onerror = (error) => {
+                console.error("Error reading file:", error);
+                clearInterval(progressInterval);
+                reject(error); // Reject the Promise in case of FileReader error
+              };
+
+              reader.readAsArrayBuffer(file);
+            });
           }
-          clearInterval(progressInterval);
-          setUploadProgress(100);
         } catch (error) {
+          console.error("Error processing files:", error);
           toast({
             title: "Something went wrong",
             description: "Please try again later",
             variant: "destructive",
           });
         }
-        // upload each file one by one
+        // setUploadProgress(100);
+        // clearInterval(progressInterval);
+        setIsUploading(false);
+        closeDialog();
       }}
       onReject={(files) => {
         return toast({
@@ -104,13 +153,10 @@ const UploadDropzone = (props: Partial<DropzoneProps>) => {
           {isUploading ? (
             <>
               <div className="flex max-w-xs items-center divide-x divide-zinc-200 overflow-hidden rounded-md bg-white outline outline-[1px] outline-zinc-200">
-                <div className="grid h-full place-items-center px-3 py-2">
-                  <Check className="h-4 w-4 text-blue-500" />
-                </div>
                 <div className="h-full truncate px-3 py-2 text-sm">
                   {uploadProgress === 100
                     ? "Upload complete!"
-                    : "Uploading your files ..."}
+                    : `Uploading ${currentFileUpload?.name}`}
                 </div>
               </div>
               <div className="mx-auto mt-4 w-full max-w-xs">
@@ -122,6 +168,8 @@ const UploadDropzone = (props: Partial<DropzoneProps>) => {
               </div>
             </>
           ) : null}
+
+          {/* {allFileUploaded ? <h1>All files are uploaded</h1> : ""} */}
         </div>
       </div>
     </Dropzone>
@@ -131,6 +179,7 @@ const UploadDropzone = (props: Partial<DropzoneProps>) => {
 const UploadButton = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
+  const onDialogCloseHandler = () => setIsOpen(false);
   return (
     <Dialog
       open={isOpen}
@@ -146,7 +195,7 @@ const UploadButton = () => {
 
       {/* <DialogContent></DialogContent> */}
       <DialogContent>
-        <UploadDropzone />
+        <UploadDropzone onDialogCloseHandler={onDialogCloseHandler} />
       </DialogContent>
     </Dialog>
   );

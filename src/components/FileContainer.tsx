@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import type { File } from "@/types/file";
 import Link from "next/link";
 import { Loader2, MessageSquare, Plus, Trash } from "lucide-react";
@@ -11,11 +11,13 @@ interface FileContainerProps {
 }
 const FileContainer = ({ file }: FileContainerProps) => {
   const utils = trpc.useUtils();
-  const { mutate: deleteFile, isPending } = trpc.deleteFile.useMutation({
-    onSuccess: () => {
-      utils.getUserFiles.invalidate();
-    },
-  });
+  const { mutate: deleteFile, isPending: isDeleting } =
+    trpc.deleteFile.useMutation({
+      onSuccess: () => {
+        utils.getUserFiles.invalidate();
+      },
+    });
+
   return (
     <li
       key={file.id}
@@ -48,7 +50,7 @@ const FileContainer = ({ file }: FileContainerProps) => {
           variant="destructive"
           onClick={() => deleteFile({ id: file.id })}
         >
-          {isPending ? (
+          {isDeleting ? (
             <Loader2 className="h-4 w-4 animate-spin text-red-500" />
           ) : (
             <Trash className="h-4 w-4 text-red-500" />

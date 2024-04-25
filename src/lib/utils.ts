@@ -13,6 +13,26 @@ export function absoluteUrl(path: string) {
 }
 
 export function getFileUrl(key: string) {
-  const url = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+  const url = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}.docx`;
   return url;
+}
+
+export function extractParagraphs(text: string) {
+  const paragraphs = text.split("\n");
+  const topic = paragraphs[0];
+  const topicIndex = topic.indexOf("Topic: ");
+  let essayParagraph = "";
+  let topicParagraph = "";
+  for (let i = 1; i < paragraphs.length; i++) {
+    essayParagraph += paragraphs[i] + "\n";
+  }
+  if (topicIndex !== -1) {
+    topicParagraph = topic.slice(topicIndex + 7);
+  } else {
+    topicParagraph = topic;
+  }
+  return {
+    topic: topicParagraph,
+    essay: essayParagraph,
+  };
 }

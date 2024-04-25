@@ -1,6 +1,9 @@
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { auth } from "@clerk/nextjs";
 
 export async function POST(req: Request) {
+  const { userId } = auth();
+  if (!userId) throw new Error("Unauthorized");
   const s3Client = new S3Client({ region: process.env.AWS_REGION });
   const fileName = req.headers.get("filename")!;
   const fileData = await req.arrayBuffer();
@@ -11,6 +14,9 @@ export async function POST(req: Request) {
     Body: buffer,
     ContentType:
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    Metadata: {
+      userId: userId,
+    },
   });
   try {
     await s3Client.send(command);

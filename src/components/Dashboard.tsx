@@ -1,31 +1,11 @@
 "use client";
-
 import { trpc } from "@/app/_trpc/client";
 import UploadButton from "./UploadButton";
-import { Ghost, Loader2, MessageSquare, Plus, Trash } from "lucide-react";
+import { Ghost } from "lucide-react";
 import Skeleton from "react-loading-skeleton";
-import Link from "next/link";
-import { format } from "date-fns";
-import { Button } from "./ui/button";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import FileContainer from "./FileContainer";
 const Dashboard = () => {
-  const router = useRouter();
-  const [currentlyDeletingFile, setCurrentlyDeletingFile] = useState<
-    string | null
-  >(null);
-  const utils = trpc.useUtils();
   const { data: files, isLoading } = trpc.getUserFiles.useQuery();
-  // const { mutate: deleteFile } = trpc.deleteFile.useMutation({
-  //   onSuccess: () => {
-  //     utils.getUserFiles.invalidate();
-  //   },
-  //   onMutate: ({ id }) => {
-  //     setCurrentlyDeletingFile(id);
-  //   },
-  //   onSettled: () => setCurrentlyDeletingFile(null),
-  // });
 
   return (
     <main className="mx-auto max-w-7xl md:p-10">
@@ -44,7 +24,7 @@ const Dashboard = () => {
                 new Date(a.createdAt).getTime()
             )
             .map((file) => (
-              <FileContainer file={file} />
+              <FileContainer file={file} key={file.id} />
             ))}
         </ul>
       ) : isLoading ? (
