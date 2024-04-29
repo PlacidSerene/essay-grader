@@ -11,14 +11,12 @@ import mammoth from "mammoth";
 import { absoluteUrl, extractParagraphs } from "@/lib/utils";
 import type { FileWithPath } from "@mantine/dropzone";
 
-interface onDialogCloseHandlerProps {
-  onDialogCloseHandler: () => void;
+interface UploadDropzoneProps extends Partial<DropzoneProps> {
+  onDialogClose: () => void; // Define the type of onDialogClose prop
 }
-const UploadDropzone = (
-  props: Partial<DropzoneProps> & onDialogCloseHandlerProps
-) => {
+const UploadDropzone = (props: UploadDropzoneProps) => {
   const utils = trpc.useUtils();
-  // const closeDialog = props.onDialogCloseHandler;
+  const { onDialogClose: closeDialog } = props;
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [currentFileUpload, setCurrentFileUpload] =
@@ -115,7 +113,7 @@ const UploadDropzone = (
         // setUploadProgress(100);
         // clearInterval(progressInterval);
         setIsUploading(false);
-        // closeDialog();
+        closeDialog();
       }}
       onReject={(files) => {
         return toast({
@@ -126,7 +124,6 @@ const UploadDropzone = (
       }}
       maxSize={1 * 1024 ** 2}
       accept={MS_WORD_MIME_TYPE}
-      {...props}
     >
       <div className="m-4 h-64 rounded-lg border border-dashed border-gray-300">
         <div className="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg bg-gray-50 hover:bg-gray-100">
@@ -177,7 +174,6 @@ const UploadDropzone = (
 const UploadButton = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const onDialogCloseHandler = () => setIsOpen(false);
   return (
     <Dialog
       open={isOpen}
@@ -193,7 +189,7 @@ const UploadButton = () => {
 
       {/* <DialogContent></DialogContent> */}
       <DialogContent>
-        <UploadDropzone onDialogCloseHandler={onDialogCloseHandler} />
+        <UploadDropzone onDialogClose={() => setIsOpen(false)} />
       </DialogContent>
     </Dialog>
   );
