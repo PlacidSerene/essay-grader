@@ -1,5 +1,5 @@
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 
 export async function POST(req: Request) {
   const { userId } = auth();

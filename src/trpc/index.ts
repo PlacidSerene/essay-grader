@@ -1,10 +1,9 @@
-import { auth, currentUser } from "@clerk/nextjs";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { privateProcedure, publicProcedure, router } from "./trpc";
 import { TRPCError } from "@trpc/server";
 import { db } from "@/db";
 import { z } from "zod";
-import { UploadStatus } from "@prisma/client";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+
 import { getFileUrl } from "@/lib/utils";
 import path from "path";
 export const appRouter = router({

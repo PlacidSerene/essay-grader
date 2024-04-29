@@ -1,7 +1,7 @@
 import ChatWrapper from "@/components/ChatWrapper";
 import PdfRenderer from "@/components/PdfRenderer";
 import { db } from "@/db";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { notFound, redirect } from "next/navigation";
 import React from "react";
 

@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { TRPCError, initTRPC } from "@trpc/server";
 /**
  * Initialization of tRPC backend

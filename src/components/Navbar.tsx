@@ -2,7 +2,8 @@ import React from "react";
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import Link from "next/link";
 import { buttonVariants } from "./ui/button";
-import { SignInButton, SignUpButton, auth, UserButton } from "@clerk/nextjs";
+import { SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 const Navbar = async () => {

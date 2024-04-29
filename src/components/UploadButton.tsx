@@ -7,7 +7,6 @@ import { File, FileX, FileCheck, Loader2, Check } from "lucide-react";
 import { trpc } from "@/app/_trpc/client";
 import { useToast } from "./ui/use-toast";
 import { Progress } from "./ui/progress";
-import { uploadFileToServer } from "@/lib/aws/uploadFileToServer";
 import mammoth from "mammoth";
 import { absoluteUrl, extractParagraphs } from "@/lib/utils";
 import type { FileWithPath } from "@mantine/dropzone";
@@ -19,10 +18,9 @@ const UploadDropzone = (
   props: Partial<DropzoneProps> & onDialogCloseHandlerProps
 ) => {
   const utils = trpc.useUtils();
-  const closeDialog = props.onDialogCloseHandler;
+  // const closeDialog = props.onDialogCloseHandler;
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [allFileUploaded, setAllFileUploaded] = useState(false);
   const [currentFileUpload, setCurrentFileUpload] =
     useState<null | FileWithPath>(null);
   const { mutate: createFile } = trpc.createFile.useMutation({
@@ -117,7 +115,7 @@ const UploadDropzone = (
         // setUploadProgress(100);
         // clearInterval(progressInterval);
         setIsUploading(false);
-        closeDialog();
+        // closeDialog();
       }}
       onReject={(files) => {
         return toast({

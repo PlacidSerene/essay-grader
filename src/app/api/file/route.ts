@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   const { essay, topic } = await req.json();
+  console.log(essay, topic);
   const res = await fetch(
     "https://iqi2bf7vv6xy3dqdkkecg6sodq0dyrxk.lambda-url.ap-southeast-1.on.aws/",
     {
