@@ -2,7 +2,7 @@
 
 Chirp is a Software as a Service (SAAS) application designed to streamline the process of grading IELTS essays. By leveraging advanced technologies such as Next.js, Prisma, TRPC, AWS Lambda, and S3, Chirp aims to provide educators and language learners with an efficient and accurate solution for evaluating written English proficiency.
 
-![Chirp Dashboard](/images/chirp_dashboard.png)
+![Chirp Dashboard](/public/thumbnail.png)
 
 ## Features
 
@@ -26,3 +26,18 @@ Chirp is a Software as a Service (SAAS) application designed to streamline the p
 To run Chirp locally, follow these steps:
 
 1. Clone the repository:
+
+   ```sh
+   git clone https://github.com/PlacidSerene/essay-grader
+
+   ```
+
+2. Install dependencies:
+
+   ```sh
+   cd essay-grader
+   npm install
+
+   ```
+
+3. Create an environment file (.env)
