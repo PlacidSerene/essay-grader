@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { db } from "@/db";
 import Dashboard from "@/components/Dashboard";
 
-const page = async () => {
+const Page = async () => {
   const { userId } = auth();
 
   if (!userId) {
@@ -21,4 +21,4 @@ const page = async () => {
   return <Dashboard />;
 };
 
-export default page;
+export default Page;

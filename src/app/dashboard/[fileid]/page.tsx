@@ -11,7 +11,7 @@ interface PageProps {
   };
 }
 
-const page = async ({ params }: PageProps) => {
+const Page = async ({ params }: PageProps) => {
   //retrieve the file id
   const { fileid } = params;
   // make db call
@@ -47,4 +47,4 @@ const page = async ({ params }: PageProps) => {
   );
 };
 
-export default page;
+export default Page;
