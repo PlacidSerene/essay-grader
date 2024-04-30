@@ -26,10 +26,11 @@ const Dashboard = () => {
             )
             .map((file) => (
               <Link
+                key={file.id}
                 href={`/dashboard/${file.id}`}
                 className="flex flex-col gap-2"
               >
-                <FileContainer file={file} key={file.id} />
+                <FileContainer file={file} />
               </Link>
             ))}
         </ul>
