@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { Metadata } from "next";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -34,5 +35,42 @@ export function extractParagraphs(text: string) {
   return {
     topic: topicParagraph,
     essay: essayParagraph,
+  };
+}
+
+export function constructMetadata({
+  title = "Chirp - the grader for IELTS teachers",
+  description = "Chirp is an open-source software to help grading IELTS essay easy.",
+  image = "/thumbnail.png",
+  icons = "/favicon.ico",
+  noIndex = false,
+}: {
+  title?: string;
+  description?: string;
+  image?: string;
+  icons?: string;
+  noIndex?: boolean;
+} = {}): Metadata {
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: [
+        {
+          url: image,
+        },
+      ],
+    },
+    icons,
+    metadataBase: new URL("https://essay-grader-wheat.vercel.app/"),
+    // themeColor: "#FFF",
+    ...(noIndex && {
+      robots: {
+        index: false,
+        follow: false,
+      },
+    }),
   };
 }
