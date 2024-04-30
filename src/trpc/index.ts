@@ -37,13 +37,13 @@ export const appRouter = router({
 
     return { success: true };
   }),
-  getAiFile: privateProcedure
-    .input(z.object({ key: z.string() }))
+  getFile: privateProcedure
+    .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       const { userId } = ctx;
-      const file = await db.aiFile.findFirst({
+      const file = await db.file.findFirst({
         where: {
-          key: input.key,
+          id: input.id,
           userId,
         },
       });

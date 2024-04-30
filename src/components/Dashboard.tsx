@@ -4,6 +4,7 @@ import UploadButton from "./UploadButton";
 import { Ghost } from "lucide-react";
 import Skeleton from "react-loading-skeleton";
 import FileContainer from "./FileContainer";
+import Link from "next/link";
 const Dashboard = () => {
   const { data: files, isLoading } = trpc.getUserFiles.useQuery();
 
@@ -24,7 +25,12 @@ const Dashboard = () => {
                 new Date(a.createdAt).getTime()
             )
             .map((file) => (
-              <FileContainer file={file} key={file.id} />
+              <Link
+                href={`/dashboard/${file.id}`}
+                className="flex flex-col gap-2"
+              >
+                <FileContainer file={file} key={file.id} />
+              </Link>
             ))}
         </ul>
       ) : isLoading ? (
