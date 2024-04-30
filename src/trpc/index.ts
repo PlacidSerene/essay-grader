@@ -37,13 +37,6 @@ export const appRouter = router({
 
     return { success: true };
   }),
-  readDocxFile: privateProcedure
-    .input(z.object({ file: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const filePath = path.join(path.resolve(__dirname, input.file));
-      console.log(filePath);
-      return filePath;
-    }),
   getAiFile: privateProcedure
     .input(z.object({ key: z.string() }))
     .query(async ({ ctx, input }) => {
