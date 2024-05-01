@@ -61,7 +61,7 @@ To run Chirp locally, follow these steps:
 4.  Setup the Lambda function, I have hosted the lambda in another repo. Please refer to:
 
     ```sh
-
+    https://github.com/PlacidSerene/EssayGraderLambda
     ```
 
 5.  Open your browser and navigate to `http://localhost:3000` to access Chirp locally.
