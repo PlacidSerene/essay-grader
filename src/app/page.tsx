@@ -3,10 +3,12 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import Image from "next/image";
+import Navbar from "@/components/Navbar";
 
 export default function Home() {
   return (
     <>
+      <Navbar />
       <MaxWidthWrapper className="mb-12 mt-28 flex flex-col items-center justify-center text-center sm:mt-40">
         <div className="mx-auto mb-4 flex max-w-fit items-center justify-center space-x-2 overflow-hidden rounded-full border border-gray-200 bg-white px-7 py-2 shadow-md backdrop-blur transition-all hover:border-gray-300 hover:bg-white/50">
           <p className="text-sm font-semibold text-gray-700">
@@ -84,10 +86,10 @@ export default function Home() {
         <div className="mb-12 px-6 lg:px-8">
           <div className="mx-auto max-w-2xl sm:text-center">
             <h2 className="mt-2 text-4xl font-bold text-gray-900 sm:text-5xl">
-              Start chatting in minutes
+              Start grading in minutes
             </h2>
             <p className="mt-4 text-lg text-gray-600">
-              Chatting to your PDF files has never been easier than with Quill
+              Grading IELTS essays has never been easier than with Chirp
             </p>
           </div>
         </div>

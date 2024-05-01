@@ -27,7 +27,7 @@ export default function RootLayout({
               inter.className
             )}
           >
-            <Navbar />
+            {/* <Navbar /> */}
             <MantineProvider>{children}</MantineProvider>
           </body>
         </html>
