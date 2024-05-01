@@ -52,7 +52,7 @@ export default function Home() {
               <div className="mt-16 flow-root sm:mt-24">
                 <div className="-m-2 rounded-xl bg-gray-900/5 p-2  ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
                   <Image
-                    src="/dashboard-preview.jpg"
+                    src="/essay-preview.png"
                     width={1364}
                     height={866}
                     alt={"product preview"}
@@ -118,8 +118,7 @@ export default function Home() {
                 Upload your PDF file
               </span>
               <span className="mt-2 text-zinc-700">
-                We&apos;ll process your file and make it ready for you to chat
-                with
+                We&apos;ll process your files and make them graded for you
               </span>
             </div>
           </li>
@@ -127,10 +126,10 @@ export default function Home() {
             <div className="border-zince-300 flex flex-col space-y-2 border-l-4 py-2 pl-4 md:border-l-0 md:border-t-2 md:pb-0 md:pt-4">
               <span className="text-sm font-medium text-blue-600">Step 3</span>
               <span className="text-xl font-semibold">
-                Start asking question
+                Download or preview them
               </span>
               <span className="mt-2 text-zinc-700">
-                It&apos;s that simple. Try out Quill today - it really takes
+                It&apos;s that simple. Try out Chirp today - it really takes
                 less than a minute
               </span>
             </div>

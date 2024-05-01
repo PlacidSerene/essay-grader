@@ -14,13 +14,13 @@ const Page = ({ params }: PageProps) => {
   //retrieve the file id
   const { fileid } = params;
 
-  const { data, isError, error } = trpc.getFile.useQuery({
+  const { data: file, isError } = trpc.getFile.useQuery({
     id: fileid,
   });
 
-  if (!data) notFound();
+  if (isError || !file?.url) notFound();
 
-  const docs = [{ uri: data?.url, fileType: "docx" }];
+  const docs = [{ uri: file.url, fileType: "docx" }];
 
   return (
     <div className="flex h-[calc(100vh-3.5rem)] flex-1 flex-col justify-between">

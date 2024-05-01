@@ -3,9 +3,8 @@ import { privateProcedure, publicProcedure, router } from "./trpc";
 import { TRPCError } from "@trpc/server";
 import { db } from "@/db";
 import { z } from "zod";
-
 import { getFileUrl } from "@/lib/utils";
-import path from "path";
+
 export const appRouter = router({
   // ...
   authCallback: publicProcedure.query(async () => {
@@ -47,6 +46,7 @@ export const appRouter = router({
           userId,
         },
       });
+
       if (!file) throw new TRPCError({ code: "NOT_FOUND" });
       return file;
     }),
