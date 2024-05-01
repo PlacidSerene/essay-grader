@@ -19,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <Providers>
-      <ClerkProvider afterSignInUrl="/dashboard" afterSignUpUrl="/dashboard">
+      <ClerkProvider>
         <html lang="en" className="light">
           <body
             className={cn(
