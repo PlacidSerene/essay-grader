@@ -6,6 +6,8 @@ import { SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
+import MobileNav from "./MobileNav";
+
 const Navbar = async () => {
   const { userId } = auth();
   return (
@@ -21,7 +23,7 @@ const Navbar = async () => {
               quality={100}
             />
           </Link>
-          {/* <MobileNav isAuth={!!userId} /> */}
+          <MobileNav isAuth={!!userId} />
           <div className="hidden items-center space-x-4 font-semibold sm:flex">
             <>
               {!userId ? (
